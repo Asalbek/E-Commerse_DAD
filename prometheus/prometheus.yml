@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'flashcart-backend-1'
+    static_configs:
+      - targets: ['backend-1:8000']
+        labels:
+          instance: 'backend-1'
+
+  - job_name: 'flashcart-backend-2'
+    static_configs:
+      - targets: ['backend-2:8000']
+        labels:
+          instance: 'backend-2'
+
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:80']
+
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
