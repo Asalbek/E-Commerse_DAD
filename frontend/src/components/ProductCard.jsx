@@ -1,9 +1,22 @@
 import { Link } from 'react-router-dom'
 
+// Gets a relevant image based on product name, locked to product ID (never changes)
+function getImageUrl(product) {
+  if (
+    product.image_url &&
+    !product.image_url.includes('example.com') &&
+    !product.image_url.includes('placeholder')
+  ) {
+    return product.image_url
+  }
+  // Uses product NAME as keyword → iPhone shows iPhone, Nike shows shoe, etc.
+  const keyword = encodeURIComponent(product.name.split(' ').slice(0, 2).join(' '))
+  return `https://loremflickr.com/400/400/${keyword}?lock=${product.id}`
+}
+
 export default function ProductCard({ product }) {
   const stockLevel = product.stock_quantity > 20 ? 'in-stock'
     : product.stock_quantity > 0 ? 'low-stock' : 'out-of-stock'
-
   const stockText = product.stock_quantity > 20 ? 'In Stock'
     : product.stock_quantity > 0 ? `Only ${product.stock_quantity} left` : 'Out of Stock'
 
@@ -11,7 +24,7 @@ export default function ProductCard({ product }) {
     <Link to={`/product/${product.id}`} className="card product-card" id={`product-${product.id}`}>
       <div className="product-image-wrap">
         <img
-          src={product.image_url || `https://picsum.photos/seed/${product.id}/400/400`}
+          src={getImageUrl(product)}
           alt={product.name}
           className="product-image"
           loading="lazy"
